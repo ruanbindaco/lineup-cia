@@ -1,7 +1,7 @@
 <template>
   <div class="login-page">
     <div class="header">
-      <h1 class="title">My Allura</h1>
+      <h1 class="title">CIA 2024</h1>
       <p class="subtitle">Gerador de Line-up</p>
     </div>
     <div class="text">

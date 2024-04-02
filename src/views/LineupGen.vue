@@ -81,7 +81,6 @@ export default {
       artistsTest.push(artist.name);
     });
     this.artistsUser = artistsTest;
-    console.log(this.artistsUser);
   },
 };
 </script>
