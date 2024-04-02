@@ -1,7 +1,7 @@
 <template>
   <div class="login-page">
     <div class="header">
-      <h1 class="title">CIA 2024</h1>
+      <h1 class="title">My Allura</h1>
       <p class="subtitle">Gerador de Line-up</p>
     </div>
     <div class="text">
@@ -27,11 +27,15 @@
 <script>
 export default {
   data() {
-    return {};
+    return {
+      clientId: "8f9ffdab050c4b2cb399ceda2a725638",
+      scope: "user-top-read",
+      redirectUrl: "http://localhost:5173/callback",
+    };
   },
   methods: {
     login() {
-      console.log('login')
+      location.href = `https://accounts.spotify.com/authorize?response_type=code&client_id=${this.clientId}&scope=${this.scope}&redirect_uri=${this.redirectUrl}`;
     },
   },
 };
