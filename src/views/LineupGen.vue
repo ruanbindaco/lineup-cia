@@ -86,7 +86,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import url("https://fonts.googleapis.com/css2?family=Slabo+27px&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400..900;1,400..900&display=swap");
 .container {
   display: flex;
   flex-direction: column;
@@ -125,6 +125,8 @@ export default {
 
         .singer {
           width: fit-content;
+          font-family: "Alegreya", serif;
+          font-weight: 500;
         }
       }
 
