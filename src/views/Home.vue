@@ -30,7 +30,7 @@ export default {
     return {
       clientId: "8f9ffdab050c4b2cb399ceda2a725638",
       scope: "user-top-read",
-      redirectUrl: "https://lineup-cia-2024-eta.vercel.app/callback",
+      redirectUrl: "https://lineup-cia-2024.vercel.app/callback",
     };
   },
   methods: {
