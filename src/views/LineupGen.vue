@@ -71,7 +71,7 @@ export default {
 
     let artists = await axios({
       method: "GET",
-      url: "https://api.spotify.com/v1/me/top/artists?limit=25",
+      url: "https://api.spotify.com/v1/me/top/artists?limit=24",
       headers: {
         Authorization: `Bearer ${this.accessToken}`,
       },
@@ -96,7 +96,7 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-image: url("../assets/images/my-allura.png");
+    background-image: url("../assets/images/background-cia-2024.png");
     background-size: cover;
     background-position: center;
     max-width: 500px;
