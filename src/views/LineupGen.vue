@@ -80,7 +80,7 @@ export default {
     let body = {
       grant_type: "authorization_code",
       code,
-      redirect_uri: "http://localhost:5173/callback",
+      redirect_uri: "https://lineup-cia-2024.vercel.app/callback",
     };
 
     await axios({
