@@ -34,7 +34,7 @@
     </div>
     <div v-else class="mobile-share">
       <span>Primeiro tire um print</span>
-      <span>Click <a href="instagram://story-camera/">aqui</a> para compartilhar no story do instagram</span>
+      <a href="instagram://story-camera/">Clique para compartilhar o print no seu story</a>
     </div>
   </div>
 </template>
