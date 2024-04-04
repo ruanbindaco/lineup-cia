@@ -79,7 +79,7 @@ export default {
     const body = {
       grant_type: "authorization_code",
       code,
-      redirect_uri: "https://lineup-cia-2024.vercel.app/callback",
+      redirect_uri: "https://lineup-cia.vercel.app/callback",
     };
 
     await axios({
@@ -96,7 +96,7 @@ export default {
         this.accessToken = res.data.access_token;
       })
       .catch((error) => {
-        window.location = "https://lineup-cia-2024.vercel.app";
+        window.location = "https://lineup-cia.vercel.app";
       });
 
     const userResponse = await axios({
