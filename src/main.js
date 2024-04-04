@@ -1,11 +1,15 @@
-import './assets/main.css'
+import "./assets/main.css";
+import "regenerator-runtime/runtime";
 
-import { createApp } from 'vue'
-import App from './App.vue'
-import router from './router'
+import { createApp } from "vue";
+import * as Vue from "vue";
+import App from "./App.vue";
+import router from "./router";
+import VueHtml2Canvas from "vue-html2canvas";
 
-const app = createApp(App)
+const app = createApp(App);
 
-app.use(router)
+app.use(VueHtml2Canvas);
+app.use(router);
 
-app.mount('#app')
+app.mount("#app");

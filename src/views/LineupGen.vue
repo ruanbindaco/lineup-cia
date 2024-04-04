@@ -1,36 +1,39 @@
 <template>
   <div class="container">
-    <div class="allura-list">
+    <div class="cia-list" ref="printMe">
       <div class="artists">
-        <div class="names">
+        <div v-if="artistsUser !== null" class="names">
           <div
-            v-if="artistsUser !== null"
             v-for="artist in artistsUser"
             class="singer"
             ref="artists"
             :key="artist"
           >
-            <span> {{ artist }} | </span>
+            <span class="artist"> {{ artist }} </span>
           </div>
           <div v-if="artistsUser == null">
             Parece que você não possui artistas :(
           </div>
         </div>
-        <div class="link">www.google.com</div>
       </div>
     </div>
-    <div class="download">Download button</div>
+    <div @click="downloadLineup" class="download">Download button</div>
   </div>
 </template>
 
 <script>
 import axios from "axios";
+import fileSaver from "file-saver";
 export default {
+  components: {
+    fileSaver,
+  },
   data() {
     return {
       accessToken: null,
       user: {},
       artistsUser: null,
+      output: null,
     };
   },
   async mounted() {
@@ -71,7 +74,7 @@ export default {
 
     let artists = await axios({
       method: "GET",
-      url: "https://api.spotify.com/v1/me/top/artists?limit=24",
+      url: "https://api.spotify.com/v1/me/top/artists?limit=25",
       headers: {
         Authorization: `Bearer ${this.accessToken}`,
       },
@@ -81,6 +84,15 @@ export default {
       artistsTest.push(artist.name);
     });
     this.artistsUser = artistsTest;
+  },
+  methods: {
+    async downloadLineup() {
+      const el = this.$refs.printMe;
+      const options = {
+        type: "dataURL",
+      };
+      fileSaver.saveAs(await this.$html2canvas(el, options));
+    },
   },
 };
 </script>
@@ -92,7 +104,8 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  .allura-list {
+  gap: 16px;
+  .cia-list {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -101,7 +114,7 @@ export default {
     background-position: center;
     max-width: 500px;
     width: 100%;
-    height: 800px;
+    height: 900px;
 
     .artists {
       display: flex;
@@ -109,7 +122,6 @@ export default {
       align-items: center;
       gap: 30px;
       flex-direction: column;
-      padding-top: 55px;
       height: 100%;
       width: 100%;
 
@@ -121,12 +133,22 @@ export default {
         text-align: justify;
         font-size: 20px;
         color: #fff;
-        width: 65%;
+        width: 475px;
+        padding-top: 125px;
 
         .singer {
           width: fit-content;
           font-family: "Alegreya", serif;
           font-weight: 500;
+
+          &:after {
+            padding-right: 4px;
+            content: " \2022 ";
+          }
+
+          &:last-child::after {
+            content: "";
+          }
         }
       }
 
@@ -155,15 +177,16 @@ export default {
 
 @media (max-width: 530px) {
   .container {
-    .allura-list {
+    .cia-list {
       background-size: contain;
       background-repeat: no-repeat;
 
       .artists {
         gap: 20px;
-        padding-top: 30px;
         .names {
           font-size: 16px;
+          width: 85%;
+          padding-top: 100px;
         }
 
         .link {
@@ -175,8 +198,7 @@ export default {
 }
 
 @media (max-width: 400px) {
-  .container .allura-list .artists {
-    padding-top: 40px;
+  .container .cia-list .artists {
     .names {
       font-size: 14px;
     }
