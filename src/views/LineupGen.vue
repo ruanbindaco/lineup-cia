@@ -2,9 +2,9 @@
   <div class="container">
     <div class="cia-list" ref="printMe">
       <div class="artists">
-        <div v-if="artistsUser !== null" class="names">
+        <div v-if="artistsUser !== null && !loading" class="names">
           <div
-            v-for="artist in artistsUser"
+            v-for="artist in filteredArtists"
             class="singer"
             ref="artists"
             :key="artist"
@@ -15,6 +15,18 @@
             Parece que você não possui artistas :(
           </div>
         </div>
+        <div v-else class="loading">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M12,1A11,11,0,1,0,23,12,11,11,0,0,0,12,1Zm0,19a8,8,0,1,1,8-8A8,8,0,0,1,12,20Z"
+              opacity=".25"
+            />
+            <path
+              d="M10.14,1.16a11,11,0,0,0-9,8.92A1.59,1.59,0,0,0,2.46,12,1.52,1.52,0,0,0,4.11,10.7a8,8,0,0,1,6.66-6.61A1.42,1.42,0,0,0,12,2.69h0A1.57,1.57,0,0,0,10.14,1.16Z"
+              class="spinner_ajPY"
+            />
+          </svg>
+        </div>
       </div>
     </div>
     <div @click="downloadLineup" class="download">Download button</div>
@@ -24,9 +36,12 @@
 <script>
 import axios from "axios";
 import fileSaver from "file-saver";
+import LoadingIcon from "../assets/icons/loading-icon.svg";
+
 export default {
   components: {
     fileSaver,
+    LoadingIcon,
   },
   data() {
     return {
@@ -34,6 +49,7 @@ export default {
       user: {},
       artistsUser: null,
       output: null,
+      loading: true,
     };
   },
   async mounted() {
@@ -57,6 +73,8 @@ export default {
         "Content-Type": "application/x-www-form-urlencoded",
       },
     });
+
+    if (response) this.loading = false;
     this.accessToken = response.data.access_token;
 
     let userResponse = await axios({
@@ -94,6 +112,31 @@ export default {
       fileSaver.saveAs(await this.$html2canvas(el, options));
     },
   },
+  computed: {
+    filteredArtists() {
+      return this.artistsUser.sort((a, b) => {
+        const strA = a.toLowerCase();
+        const strB = b.toLowerCase();
+
+        if (strA < strB) {
+          return -1;
+        }
+
+        if (strA > strB) {
+          return 1;
+        }
+
+        if (isNaN(Number(strA)) || isNaN(Number(strB))) {
+          return 0;
+        }
+
+        const numA = parseInt(strA);
+        const numB = parseInt(strB);
+
+        return numA - numB;
+      });
+    },
+  },
 };
 </script>
 
@@ -105,6 +148,7 @@ export default {
   justify-content: center;
   align-items: center;
   gap: 16px;
+
   .cia-list {
     display: flex;
     justify-content: center;
@@ -158,6 +202,22 @@ export default {
         text-align: justify;
         font-size: 20px;
         color: #fff;
+      }
+    }
+
+    .loading {
+      margin-top: 20px;
+      width: 60px;
+      height: 60px;
+      transform-origin: center;
+      animation: spinner_AtaB 0.75s infinite linear;
+      path {
+        fill: #fff;
+      }
+    }
+    @keyframes spinner_AtaB {
+      100% {
+        transform: rotate(360deg);
       }
     }
   }
