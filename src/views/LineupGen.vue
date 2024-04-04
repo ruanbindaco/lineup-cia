@@ -1,7 +1,6 @@
 <template>
   <div class="container">
     <div class="cia-list" ref="printMe">
-      <div class="link-lineup">https://lineup-cia-2024.vercel.app</div>
       <div class="artists">
         <div v-if="artistsUser !== null && !loading" class="names">
           <div
@@ -35,7 +34,7 @@
     </div>
     <div v-else class="mobile-share">
       <span>Primeiro tire um print</span>
-      <span>Click aqui para compartilhar no story do instagram</span>
+      <span>Click <a href="instagram://story-camera/">aqui</a> para compartilhar no story do instagram</span>
     </div>
   </div>
 </template>
@@ -72,12 +71,12 @@ export default {
     window.removeEventListener("resize", this.handleResize);
   },
   async mounted() {
-    let clientId = "8f9ffdab050c4b2cb399ceda2a725638";
-    let clientSecret = "6ba5805874214c0b924939a0a34cd956";
-    let params = new URLSearchParams(document.location.search);
-    let code = params.get("code");
+    const clientId = "8f9ffdab050c4b2cb399ceda2a725638";
+    const clientSecret = "6ba5805874214c0b924939a0a34cd956";
+    const params = new URLSearchParams(document.location.search);
+    const code = params.get("code");
 
-    let body = {
+    const body = {
       grant_type: "authorization_code",
       code,
       redirect_uri: "https://lineup-cia-2024.vercel.app/callback",
@@ -192,15 +191,6 @@ export default {
     max-width: 500px;
     width: 100%;
     height: 900px;
-
-    .link-lineup {
-      display: flex;
-      font-size: 20px;
-      font-weight: 600;
-      justify-content: center;
-      background: rgb(255, 255, 255, 0.9);
-      width: 100%;
-    }
 
     .artists {
       display: flex;
