@@ -1,6 +1,7 @@
 <template>
   <div class="container">
     <div class="cia-list" ref="printMe">
+      <div class="link-lineup">https://lineup-cia-2024.vercel.app</div>
       <div class="artists">
         <div v-if="artistsUser !== null && !loading" class="names">
           <div
@@ -29,7 +30,13 @@
         </div>
       </div>
     </div>
-    <div @click="downloadLineup" class="download">Download button</div>
+    <div v-if="device === 'desktop'" @click="downloadLineup" class="download">
+      Download
+    </div>
+    <div v-else class="mobile-share">
+      <span>Primeiro tire um print</span>
+      <span>Click aqui para compartilhar no story do instagram</span>
+    </div>
   </div>
 </template>
 
@@ -50,7 +57,19 @@ export default {
       artistsUser: null,
       output: null,
       loading: true,
+      device:
+        window.innerWidth > 768
+          ? "desktop"
+          : window.innerWidth > 480 && window.innerWidth <= 768
+          ? "tablet"
+          : "mobile",
     };
+  },
+  created() {
+    window.addEventListener("resize", this.handleResize);
+  },
+  destroyed() {
+    window.removeEventListener("resize", this.handleResize);
   },
   async mounted() {
     let clientId = "8f9ffdab050c4b2cb399ceda2a725638";
@@ -61,10 +80,10 @@ export default {
     let body = {
       grant_type: "authorization_code",
       code,
-      redirect_uri: "https://lineup-cia-2024.vercel.app/callback",
+      redirect_uri: "http://localhost:5173/callback",
     };
 
-    let response = await axios({
+    await axios({
       method: "POST",
       url: "https://accounts.spotify.com/api/token",
       data: new URLSearchParams(Object.entries(body)).toString(),
@@ -72,12 +91,16 @@ export default {
         Authorization: `Basic ${btoa(clientId + ":" + clientSecret)}`,
         "Content-Type": "application/x-www-form-urlencoded",
       },
-    });
+    })
+      .then((res) => {
+        if (res) this.loading = false;
+        this.accessToken = res.data.access_token;
+      })
+      .catch((error) => {
+        window.location = "https://lineup-cia-2024.vercel.app";
+      });
 
-    if (response) this.loading = false;
-    this.accessToken = response.data.access_token;
-
-    let userResponse = await axios({
+    const userResponse = await axios({
       method: "GET",
       url: "https://api.spotify.com/v1/me",
       headers: {
@@ -90,7 +113,7 @@ export default {
       id: userResponse.data.id,
     };
 
-    let artists = await axios({
+    const artists = await axios({
       method: "GET",
       url: "https://api.spotify.com/v1/me/top/artists?limit=25",
       headers: {
@@ -104,6 +127,14 @@ export default {
     this.artistsUser = artistsTest;
   },
   methods: {
+    handleResize() {
+      this.device =
+        window.innerWidth > 768
+          ? "desktop"
+          : window.innerWidth > 480 && window.innerWidth <= 768
+          ? "tablet"
+          : "mobile";
+    },
     async downloadLineup() {
       const el = this.$refs.printMe;
       const options = {
@@ -148,9 +179,11 @@ export default {
   justify-content: center;
   align-items: center;
   gap: 16px;
+  transform: scale(0.9);
 
   .cia-list {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     background-image: url("../assets/images/background-cia-2024.png");
@@ -159,6 +192,15 @@ export default {
     max-width: 500px;
     width: 100%;
     height: 900px;
+
+    .link-lineup {
+      display: flex;
+      font-size: 20px;
+      font-weight: 600;
+      justify-content: center;
+      background: rgb(255, 255, 255, 0.9);
+      width: 100%;
+    }
 
     .artists {
       display: flex;
@@ -221,6 +263,7 @@ export default {
       }
     }
   }
+
   .download {
     padding: 8px 16px;
     background-color: rgba(0, 81, 88, 255);
@@ -232,6 +275,14 @@ export default {
     &:hover {
       background-color: #08838e;
     }
+  }
+
+  .mobile-share {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
   }
 }
 
