@@ -1,5 +1,9 @@
 <template>
   <div class="container">
+    <div v-if="device !== 'desktop'" class="mobile-share">
+      <span>Primeiro tire um print</span>
+      <a href="instagram://story-camera/">Clique para compartilhar o print no seu story</a>
+    </div>
     <div class="cia-list" ref="printMe">
       <div class="artists">
         <div v-if="artistsUser !== null && !loading" class="names">
@@ -31,10 +35,6 @@
     </div>
     <div v-if="device === 'desktop'" @click="downloadLineup" class="download">
       Download
-    </div>
-    <div v-else class="mobile-share">
-      <span>Primeiro tire um print</span>
-      <a href="instagram://story-camera/">Clique para compartilhar o print no seu story</a>
     </div>
   </div>
 </template>
@@ -281,6 +281,7 @@ export default {
     .cia-list {
       background-size: contain;
       background-repeat: no-repeat;
+      height: 800px;
 
       .artists {
         gap: 20px;
@@ -298,10 +299,19 @@ export default {
   }
 }
 
+@media (max-width: 450px) {
+  .container .cia-list {
+    height: 700px;
+  }
+}
+
 @media (max-width: 400px) {
-  .container .cia-list .artists {
-    .names {
-      font-size: 14px;
+  .container .cia-list{
+    height: 600px;
+    .artists {
+      .names {
+        font-size: 14px;
+      }
     }
   }
 }
